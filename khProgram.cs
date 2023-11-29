@@ -75,7 +75,11 @@ class khProgram {
                 if (khAcceptableEquationStrings.Contains(khUsersChoice)) {
                         // Print the operations menu
                         // KhPrintOperationsMenu();
-                        // KhGetUserOperationsMenuChoice();
+                        // string KhUserChoice = KhGetUserOperationsMenuChoice();
+                        // Calls the correct operation child class.
+                        // KhCallOperation();
+                }
+                else if (khAcceptableViewHistoryStrings.Contains(khUsersChoice)) {
                         
                 }
         }
