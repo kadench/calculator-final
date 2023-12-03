@@ -13,13 +13,14 @@
 using System.Text;
 
     class khHistory {
-    private List<double> _khHistoryList;
-    private double _khToAdd;
+    private List<string> _khHistoryList;
 
-    public khHistory() {}
+    public khHistory() {
+        _khHistoryList = new List<string>();
+    }
 
-    public void UpdateHistoryList() {
-        _khHistoryList.Add(_khToAdd);
+    public void UpdateHistoryList(string khProgramOutput) {
+        _khHistoryList.Add(khProgramOutput);
     }
 
     public override string ToString()
