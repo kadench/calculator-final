@@ -10,23 +10,31 @@
 // https://github.com/kadench/polymorphism-development-project/blob/main/program.cs | Remembering how to do the while loop for
 // the guiding of the program with the user's chosen action.
 // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/selection-statements | Learning about the benifits of the switch method.
-// https://youtu.be/Qu93CRt-FGc?si=zJT7hEYTu_8Kth-r | An example of a switch case being used.
+// https://youtu.be/Qu93CRt-FGc?si=zJT7hEYTu_8Kth-r | An example of a switch case being used. Explained how to return multiple things.
+// https://sl.bing.net/d60Hbq7xh2y | Asking about scope and the use of static variables in program that effect its running.
 
 using System;
 
 class khProgram {
+        // Static attribute controls if the program should continue or not. Allows for easy and wide change.
+        static bool khProgramDone = false;
+
         // Runs the calculator program.
         static void Main(string[] args) {
                 Console.Clear();
                 // Prints the introduction to the terminal.
                 KhPrintStartingMessage();
+                // Creates one history instance to be used at any point in the program.
+                khHistory khProgramHistory = khHistory.KhGetInstance();
                 // Prints the calculator menu to the terminal.
-                KhPrintCalculatorMenu();
-                // Asks for the user's choice.
-                string khUsersChoice = KhGetUserMenuAction();
-                // Calls the right class to do the right action.
-                KhCallClass(khUsersChoice);
-
+                do {
+                        Console.Clear();
+                        // Asks for the user's choice.
+                        KhPrintCalculatorMenu();
+                        string khUsersChoice = KhGetUserMenuAction();
+                        // Calls the right class to do the right action.
+                        KhCallClass(khUsersChoice);
+                }while (khProgramDone == false);
         }
 
         // Writes the program's starting message to the terminal.
@@ -42,19 +50,12 @@ class khProgram {
 
         // Prints the program's calculator menu for the user. (There is a delay for each writeline to add a cool effect.)
         static void KhPrintCalculatorMenu() {
-                Thread.Sleep(100);
                 Console.WriteLine("--- Calculator Menu ---");
-                Thread.Sleep(100);
                 Console.WriteLine("1. Enter an equation");
-                Thread.Sleep(100);
                 Console.WriteLine("2. View History");
-                Thread.Sleep(100);
                 Console.WriteLine("3. Save History");
-                Thread.Sleep(100);
                 Console.WriteLine("4. Clear History");
-                Thread.Sleep(100);
                 Console.WriteLine("-----------------------");
-                Thread.Sleep(100);
         }
 
         // Asks for the user's requested action.
@@ -66,50 +67,100 @@ class khProgram {
         }
         
         // Creates or calls the correct class instance in the calculator based on the user's choice. 
-        static void KhCallClass(string khUsersChoice) {
+        static bool KhCallClass(string khUsersChoice) {
                 bool khMethodCalled = false;
                 do {
                         switch (khUsersChoice.ToLower()) {
                                 case "equation":
                                 case "e":
                                 case "1":
-                                // Call the class for entering an equation
-                                khEquation khNewEquation = new khEquation();
-                                khNewEquation.KhGetEquationList();
-                                khNewEquation.KhGetOperatorsList();
-                                khMethodCalled = true;
-                                break;
+                                        // Makes the equation to solve.
+                                        khEquation khMadeEquation = KhNewEquation();
+                                        List<double> khUsedNumbers = khMadeEquation.KhGetNumbersList();
+                                        List<string> khUsedOperators = khMadeEquation.KhGetOperatorsList();
+
+                                        // Takes the equation information and calls the right operation
+                                        // khSolution khNewSolution = KhSolveEquation(khUsedNumbers, khUsedOperators);
+                                        KhSaveItem(khMadeEquation);
+                                        khMethodCalled = true;
+                                        break;
                                 case "vh":
                                 case "view":
                                 case "2":
                                 case "view history":
-                                // Call the method for viewing history
-                                Console.WriteLine("Worked.");
-                                khMethodCalled = true;
-                                break;
+                                        // Call the method for viewing history
+                                        khHistory khProgramHistory = khHistory.KhGetInstance();
+                                        Console.WriteLine(khProgramHistory.ToString());
+                                        khMethodCalled = true;
+                                        break;
                                 case "sh":
                                 case "save":
                                 case "3":
                                 case "save history":
-                                // Call the method for saving history
-                                Console.WriteLine("Worked.");
-                                khMethodCalled = true;
-                                break;
+                                        // Call the method for saving history
+                                        Console.WriteLine("Worked.");
+                                        khMethodCalled = true;
+                                        break;
                                 case "ch":
                                 case "clear":
                                 case "4":
                                 case "clear history":
-                                // Call the method for clearing history
-                                Console.WriteLine("Worked.");
-                                khMethodCalled = true;
-                                break;
+                                        // Call the method for clearing history
+                                        Console.WriteLine("Worked.");
+                                        khMethodCalled = true;
+                                        break;
+                                case "quit":
+                                case "q":
+                                case "5":
+                                        bool khUserQuitAnswer = KhQuitConfirmation();
+                                        khMethodCalled = true;
+                                        if (khUserQuitAnswer == true) {
+                                                khProgramDone = true;
+                                        }
+                                        break;
                                 default:
                                 Console.WriteLine("Invalid input. Please try again.");
                                 break;
                         }
                 } while(!khMethodCalled == true);
+                return khMethodCalled;
         }
 
-        
+        // Makes a new equation and returns it to KhCallClass
+        static khEquation KhNewEquation() {
+                khEquation khNewEquation = new khEquation();
+                return khNewEquation;
+        }
+
+        // Saves the history to the history instance for that program.
+        static void KhSaveItem(khEquation khSaveItem) {
+                khHistory khProgramHistory = khHistory.KhGetInstance();
+                khProgramHistory.KhUpdateHistoryList(khSaveItem.ToString());
+        }
+
+        // Writes the quit warning message to the user.
+        static bool KhQuitConfirmation() {
+                bool khQuitQestionAnswered = false;
+                bool khUserQuitAnswer = false;
+                Console.WriteLine("All unsaved history will be lost.");
+                do {
+                Console.Write("Are you sure you want to quit the program?: ");
+                string khUserAnswer = Console.ReadLine().ToLower();
+                switch (khUserAnswer) {
+                        case "y":
+                        case "yes":
+                                khUserQuitAnswer = true;
+                                break;
+                        case "n":
+                        case "no":
+                                khUserQuitAnswer = false;
+                                break;
+                        default:
+                                Console.WriteLine($"\"{khUserAnswer}\" is an invalid response. Try again.");
+                        break;
+                }
+                } while(khQuitQestionAnswered == false);
+                return khUserQuitAnswer;
+        }
 
 }

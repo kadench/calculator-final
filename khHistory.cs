@@ -9,18 +9,37 @@
 // https://acrobat.adobe.com/id/urn:aaid:sc:US:5c0d42b8-a5c3-4502-9246-da8e9fb1445c | First draft of my project plan.
 // https://learn.microsoft.com/en-us/dotnet/api/system.text.stringbuilder?view=net-8.0#code-try-4 | Learning how to use the string builder
 // https://sl.bing.net/hDHxBfh3QXI | ChatGPT 4 w/ Bing talking about how to format a ToString for the khHistory class.
+// https://sl.bing.net/kKf1ESzT4Vw | Learning about the benifits of a private constructor and how to make one History class available to
+// all of the program. Very useful.
 
 using System.Text;
+using System.Collections.Generic;
 
-    class khHistory {
+class khHistory {
+    private static khHistory khProgramHistoryClass = null;
     private List<string> _khHistoryList;
 
-    public khHistory() {
+    // Private constructor so that no other instance can be created
+    private khHistory() {
         _khHistoryList = new List<string>();
     }
 
-    public void UpdateHistoryList(string khProgramOutput) {
+    // Public method to return the single instance of the class
+    public static khHistory KhGetInstance()
+    {
+        if (khProgramHistoryClass == null)
+        {
+            khProgramHistoryClass = new khHistory();
+        }
+        return khProgramHistoryClass;
+    }
+
+    public void KhUpdateHistoryList(string khProgramOutput) {
         _khHistoryList.Add(khProgramOutput);
+    }
+
+    public string KhGetEquation(List<string> khItemToParse) {
+        return khItemToParse[1];
     }
 
     public override string ToString()

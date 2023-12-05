@@ -9,47 +9,58 @@
 // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/selection-statements | Learning about the benifits of the switch method.
 // https://sl.bing.net/gsbQoCK33cG | Help with the clearing of the equation.
 // https://learn.microsoft.com/en-us/dotnet/api/system.string.join?view=net-8.0 | Learning more about String.join.
+// https://www.tutorialspoint.com/How-to-calculate-the-length-of-the-string-using-Chash#:~:text=Use%20the%20String.,the%20length%20of%20the%20string. | How to get string lrngth
 
 
 class khEquation {
-    private List<string> _khEquationList = new List<string>();
+    private List<double> _khNumbersList;
     private string _khEquationString;
-    private bool _khEquationCorrect = false;
-    private List<string> _khOperationsList = new List<string> { "+", "-", "x", "*", "/", "="};
-    private List<string> _khUsedOperations = new List<string>();
-    private int _khNumberOfOperators = 0;
-    private int _khNumberOfNumbersInEquation = 0;
+    private bool _khEquationCorrect;
+    private List<string> _khOperationsList;
+    private List<string> _khUsedOperations;
+    private int _khNumberOfOperators;
+    private int _khNumberOfNumbersInEquation;
 
-    // Constructs the calculator class.
+    // Constructs the calculator class. (Calls and brings the methods together)
     public khEquation() {
+        // Setting the attributes
+        _khNumbersList = new List<double>();
+        _khEquationCorrect = false;
+        _khOperationsList = new List<string>{"+", "-", "x", "*", "/", "="};
+        _khUsedOperations = new List<string>();
+        _khNumberOfOperators = 0;
+        _khNumberOfNumbersInEquation = 0;
+        
+        // Creating the equation
         do {
-            KhMakeEquationList();
-            KhCheckEquationList();
+            KhMakeEquation();
+            KhEquationCheck();
         } while(_khEquationCorrect == false);
     }
 
-    // Makes an equation list for easy manipulation later.
-private void KhMakeEquationList() {
+    // Starts the equation making process
+    private void KhMakeEquation() {
     string khEquationPart = "none";
-    _khNumberOfNumbersInEquation = 0;
-    _khNumberOfOperators = 0;
-    _khEquationString = "";
     do {
+        KhPrintMenu(khEquationPart);
+        khEquationPart = Console.ReadLine();
+        KhProcessInput(khEquationPart);
+    } while (khEquationPart != "=");
+}
+
+    private void KhPrintMenu(string khEquationPart) {
         Console.Clear();
-        // Clear the console and ask for the next equation part.
-        Console.WriteLine("--------------------------- Enter Equation ---------------------------");
-        Console.WriteLine("--TIP: you'll be able to look over the equation before it's calculated");
-        Console.WriteLine("--TIP: type \"=\" when you're done entering an equation");
-        Console.WriteLine("--TIP: valid operation symbols are: +, -, x, *, /, =");
-        Console.WriteLine("--TIP: type \"c\" if you've entered a mistake");
-        Console.WriteLine("--TIP: type \"cl\" to clear the whole equation");
-        Console.WriteLine("-----------------------------------------------------------------------");
+        Console.WriteLine("--------------------------- Enter Equation ---------------------------------");
+        Console.WriteLine("--TIP: type \"c\" if you've entered a mistake. This will not delete operators.");
+        Console.WriteLine("--TIP: you'll be able to look over the equation before it's calculated.");
+        Console.WriteLine("--TIP: type \"=\" when you're done entering an equation.");
+        Console.WriteLine("--TIP: valid operation symbols are: +, -, x, *, /, =.");
+        Console.WriteLine("--TIP: type \"cl\" to clear the whole equation.");
+        Console.WriteLine("----------------------------------------------------------------------------");
         Console.WriteLine("Items in equation so far:");
         Console.WriteLine($"Numbers: {_khNumberOfNumbersInEquation} | Operaters: {_khNumberOfOperators} | Last Entered: {khEquationPart}");
         
-        // Write different things to the terminal depending on run through.
         if (_khNumberOfNumbersInEquation == 0) {
-            // Sets the equation string to nothing so none doesn't show up again.
             Console.WriteLine($"Equation: none");
         }
         else {
@@ -58,82 +69,148 @@ private void KhMakeEquationList() {
 
         Console.WriteLine();
         Console.Write("Enter a number or operation symbol (whole or rational): ");
-        khEquationPart = Console.ReadLine().ToLower();
-        
+    }
+
+    // Processes the input of the user.
+    private void KhProcessInput(string khEquationPart) {
         switch (khEquationPart)
         {
             case "c":
-                if (_khEquationList.Count > 0)
-                {
-                    
-                    _khEquationList.RemoveAt(_khEquationList.Count - 1);
-                    _khEquationString = string.Join(" ", _khEquationList);
-                    _khEquationString += " ";
-                }
+                KhRemoveLastNumber();
                 break;
-
             case "cl":
-                _khEquationList.Clear();
-                _khEquationString = "";
-                _khNumberOfNumbersInEquation = 0;
-                _khNumberOfOperators = 0;
+                KhClearEquation();
                 break;
-
-            default:
-                // If the user entered a number or operator
-                // Add that part to the equation list.
-                _khEquationList.Add(khEquationPart);
-                _khEquationString += $"{khEquationPart} ";
-                _khNumberOfNumbersInEquation += 1;
-
-                // If the equation part is an operation, put it in the operations list.
-                if (_khOperationsList.Contains(khEquationPart))
-                {
-                    _khUsedOperations.Add(khEquationPart);
-                    _khNumberOfOperators += 1;
-                    _khNumberOfNumbersInEquation -= 1;
+            case "+":
+            case "-":
+            case "x":
+            case "*":
+            case "/":
+                if (_khUsedOperations.Count < 1){
+                    KhAddOperator(khEquationPart);
+                }
+                else {
+                    Console.WriteLine("Please include one operation per equation.");
+                    Console.Write("Press enter to continue: ");
+                    Console.ReadLine();
                 }
                 break;
-}
+            default:
+                KhAddNumber(khEquationPart);
+                break;
+        }
+    }
 
-    } while(khEquationPart != "=");
-    _khEquationString = _khEquationString.Trim();
+    private void KhRemoveLastNumber() {
+        // Setting the number length so that the number can be deleted fully.
+        int khDeleteToIndex = _khNumbersList[_khNumbersList.Count - 1].ToString().Length + 1;
+        int khInitialLength = _khEquationString.Length;
+
+        // Making sure that the last character in the equation string is not an operator. If so, do nothing.
+        if (_khEquationString.Length > 0 && _khEquationString.EndsWith(" ") && !_khOperationsList.Contains(_khEquationString[_khEquationString.Length - 2].ToString())) {
+            
+            // Deletes the number from the equation string based on length of the last number in the numbers' list.
+            for (int i = khInitialLength; i > khInitialLength - khDeleteToIndex; i--) {
+                _khEquationString = _khEquationString.Remove(_khEquationString.Length - 1);
+            }
+            _khNumberOfNumbersInEquation -= 1;
+            _khNumbersList.RemoveAt(_khNumbersList.Count - 1);
+        }
     }
 
 
+    private void KhClearEquation() {
+        _khNumbersList.Clear();
+        _khUsedOperations.Clear();
+        _khEquationString = "";
+        _khNumberOfOperators = _khUsedOperations.Count;
+        _khNumberOfNumbersInEquation = _khNumbersList.Count;
+    }
 
-    // Turns the Equation List into a string so the user can validate it.
-    private void KhCheckEquationList() {
-            // Asks the user if the calculation is correct. Have them enter it again if not. 
+    private void KhAddOperator(string khEquationPart) {
+        _khUsedOperations.Add(khEquationPart);
+        _khNumberOfOperators += 1;
+        _khEquationString += $"{khEquationPart} ";
+    }
+
+    // Checks if the equation string ends in an operator
+    private bool KhEndWithOperation() {
+        bool endsWithOperation = false;
+        foreach (string khOperation in _khUsedOperations)
+        {
+            if (_khEquationString.EndsWith(khOperation))
+            {
+                endsWithOperation = true;
+            }
+        }
+        return endsWithOperation;
+    }
+
+    private void KhAddNumber(string khEquationPart) {
+        double khEquationPartToDouble;
+        if (double.TryParse(khEquationPart, out khEquationPartToDouble)){
+            _khNumbersList.Add(khEquationPartToDouble);
+            _khEquationString += $"{khEquationPart} ";
+            _khNumberOfNumbersInEquation += 1;
+        }
+    }
+
+    // Writes the equation string to the terminal so the user can validate it.
+    private void KhEquationCheck() {
+        _khEquationString = _khEquationString.Trim();
+        bool khEndWithOperator = KhEndWithOperation();
+        
+        // Only runs this part if the equation doesn't end in an operatiom. 
+        if (khEndWithOperator == false) {
+            
+            // Asks the user if the calculation is correct. Have them enter it again if not.
+            Console.Clear();
             Console.Write($"Did you mean to put \"{_khEquationString}\"?: ");
             string khUserNumberResponse = Console.ReadLine();
             switch (khUserNumberResponse.ToLower()) {
                     case "y":
                     case "yes":
-                    // Calls class to split equation so it can be passed into an operation.
+                    // Lets the equation pass.
                     _khEquationCorrect = true;
                     break;
                     case "n":
                     case "no":
-                    // Has the user enter the right equation in.
+                    // Resets equations stats to have the user enter in a fixed equation.
                     _khEquationCorrect = false;
+                    _khNumbersList.Clear();
+                    _khUsedOperations.Clear();
+                    _khNumberOfNumbersInEquation = 0;
+                    _khNumberOfOperators = 0;
+                    Console.WriteLine("That's ok. Try again.");
+                    Console.Write("Press enter to continue: ");
+                    Console.ReadLine();
                     break;
                     default:
                     Console.WriteLine($"\"{khUserNumberResponse}\" is not a valid response. \"yes\" or \"no\" only (first letter accepted too).");
                     break;
             }
         }
+        else {
+            Console.WriteLine("Your equation can't end in an operator. Try again.");
+            Console.Write("Press enter to continue: ");
+            _khEquationString += " ";
+            Console.ReadLine();
+        }
+                    
         
-    // Gets the operators used list
+    }
+        
+    // Gets the operators used list.
     public List<string> KhGetOperatorsList() {
         return _khUsedOperations;
     }
     
-    // Gets the equation list
-    public List<string> KhGetEquationList() {
-        return _khEquationList;
+    // Gets the numbers list.
+    public List<double> KhGetNumbersList() {
+        return _khNumbersList;
     }
-
+    
+    // Returns the tostring of the equation instance.
     public override string ToString()
     {
         return $"Equation: {_khEquationString}";
