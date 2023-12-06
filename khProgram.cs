@@ -55,6 +55,7 @@ class khProgram {
                 Console.WriteLine("2. View History");
                 Console.WriteLine("3. Save History");
                 Console.WriteLine("4. Clear History");
+                Console.WriteLine("5. Quit");
                 Console.WriteLine("-----------------------");
         }
 
@@ -78,19 +79,33 @@ class khProgram {
                                         khEquation khMadeEquation = KhNewEquation();
                                         List<double> khUsedNumbers = khMadeEquation.KhGetNumbersList();
                                         List<string> khUsedOperators = khMadeEquation.KhGetOperatorsList();
+                                        string khEquationString = khMadeEquation.KhGetEquationString();
 
-                                        // Takes the equation information and calls the right operation
-                                        // khSolution khNewSolution = KhSolveEquation(khUsedNumbers, khUsedOperators);
-                                        KhSaveItem(khMadeEquation);
+                                        // Solves the expression.
+                                        khSolution khNewSolution = new khSolution(khUsedNumbers, khUsedOperators, khEquationString);
+                                        KhSaveItem(khNewSolution);
+
+                                        // Show the user the answer
+                                        Console.Clear();
+                                        Console.WriteLine("The result:");
+                                        Console.WriteLine(khNewSolution.ToString());
+                                        Console.WriteLine("Your expression has been saved.");
+                                        Console.Write("Press enter to continue: ");
+                                        Console.ReadLine();
+                                        
+                                        // End of new equation and solution.
                                         khMethodCalled = true;
                                         break;
                                 case "vh":
                                 case "view":
                                 case "2":
                                 case "view history":
+                                        Console.Clear();
                                         // Call the method for viewing history
                                         khHistory khProgramHistory = khHistory.KhGetInstance();
-                                        Console.WriteLine(khProgramHistory.ToString());
+                                        Console.Write(khProgramHistory.ToString());
+                                        Console.Write("Press enter to continue: ");
+                                        Console.ReadLine();
                                         khMethodCalled = true;
                                         break;
                                 case "sh":
@@ -98,7 +113,10 @@ class khProgram {
                                 case "3":
                                 case "save history":
                                         // Call the method for saving history
-                                        Console.WriteLine("Worked.");
+                                        khProgramHistory = khHistory.KhGetInstance();
+
+                                        // Not giving the instance a name because it's never used.
+                                        khFile _ = new khFile(khProgramHistory.ToString());
                                         khMethodCalled = true;
                                         break;
                                 case "ch":
@@ -106,7 +124,14 @@ class khProgram {
                                 case "4":
                                 case "clear history":
                                         // Call the method for clearing history
-                                        Console.WriteLine("Worked.");
+                                        khHistory khSameHistory = khHistory.KhGetInstance();
+                                        khSameHistory.ClearHistoryList();
+                                        
+                                        // Updating the user
+                                        Console.WriteLine();
+                                        Console.WriteLine("Your history has been deleted.");
+                                        Console.Write("Press enter to continue: ");
+                                        Console.ReadLine();
                                         khMethodCalled = true;
                                         break;
                                 case "quit":
@@ -133,7 +158,7 @@ class khProgram {
         }
 
         // Saves the history to the history instance for that program.
-        static void KhSaveItem(khEquation khSaveItem) {
+        static void KhSaveItem(khSolution khSaveItem) {
                 khHistory khProgramHistory = khHistory.KhGetInstance();
                 khProgramHistory.KhUpdateHistoryList(khSaveItem.ToString());
         }
@@ -144,23 +169,26 @@ class khProgram {
                 bool khUserQuitAnswer = false;
                 Console.WriteLine("All unsaved history will be lost.");
                 do {
-                Console.Write("Are you sure you want to quit the program?: ");
-                string khUserAnswer = Console.ReadLine().ToLower();
-                switch (khUserAnswer) {
+                        Console.Write("Are you sure you want to quit the program?: ");
+                        string khUserAnswer = Console.ReadLine().ToLower();
+                        switch (khUserAnswer) {
                         case "y":
                         case "yes":
                                 khUserQuitAnswer = true;
+                                khQuitQestionAnswered = true;
                                 break;
                         case "n":
                         case "no":
                                 khUserQuitAnswer = false;
+                                khQuitQestionAnswered = true;
                                 break;
                         default:
                                 Console.WriteLine($"\"{khUserAnswer}\" is an invalid response. Try again.");
-                        break;
-                }
+                                break;
+                        }
                 } while(khQuitQestionAnswered == false);
                 return khUserQuitAnswer;
         }
+
 
 }

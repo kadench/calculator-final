@@ -6,14 +6,14 @@
 // https://byui.instructure.com/courses/249838/assignments/11893911?module_item_id=32704680 | Following the assignment's rubric.
 // https://acrobat.adobe.com/id/urn:aaid:sc:US:5c0d42b8-a5c3-4502-9246-da8e9fb1445c | First draft of my project plan.
 abstract class khOperation {
-    protected List<double> _khNumberList;
+    protected double _khNumber1;
+    protected double _khNumber2;
+    protected double _khSolution;
 
     // The Operations's constructer
-    public khOperation() {
-        Console.WriteLine("The operation system hasn't been implemented yet.");
-        Console.WriteLine("I have only included the methods and constructers I gave myself with the template.");
-        Console.Write("Press enter to continue: ");
-        Console.ReadLine();
+    public khOperation(List<double> khNumbersList) {
+        _khNumber1 = khNumbersList[0];
+        _khNumber2 = khNumbersList[1];
     }
 
     protected abstract void KhDoOperation();

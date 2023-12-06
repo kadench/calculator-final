@@ -48,14 +48,16 @@ class khEquation {
     } while (khEquationPart != "=");
 }
 
+    // Writes the equation menu.
     private void KhPrintMenu(string khEquationPart) {
         Console.Clear();
         Console.WriteLine("--------------------------- Enter Equation ---------------------------------");
-        Console.WriteLine("--TIP: type \"c\" if you've entered a mistake. This will not delete operators.");
+        Console.WriteLine("--TIP: Please enter one item at a time or it will not recognize the input.");
         Console.WriteLine("--TIP: you'll be able to look over the equation before it's calculated.");
-        Console.WriteLine("--TIP: type \"=\" when you're done entering an equation.");
         Console.WriteLine("--TIP: valid operation symbols are: +, -, x, *, /, =.");
         Console.WriteLine("--TIP: type \"cl\" to clear the whole equation.");
+        Console.WriteLine("--TIP: type \"c\" if you've entered a mistake. This will not delete operators.");
+        Console.WriteLine("--TIP: type \"=\" when you're done entering an equation.");
         Console.WriteLine("----------------------------------------------------------------------------");
         Console.WriteLine("Items in equation so far:");
         Console.WriteLine($"Numbers: {_khNumberOfNumbersInEquation} | Operaters: {_khNumberOfOperators} | Last Entered: {khEquationPart}");
@@ -86,14 +88,7 @@ class khEquation {
             case "x":
             case "*":
             case "/":
-                if (_khUsedOperations.Count < 1){
-                    KhAddOperator(khEquationPart);
-                }
-                else {
-                    Console.WriteLine("Please include one operation per equation.");
-                    Console.Write("Press enter to continue: ");
-                    Console.ReadLine();
-                }
+                KhAddOperator(khEquationPart);
                 break;
             default:
                 KhAddNumber(khEquationPart);
@@ -101,6 +96,7 @@ class khEquation {
         }
     }
 
+    // Clears the last NUMBER from the equation. Does not delete any operation.
     private void KhRemoveLastNumber() {
         // Setting the number length so that the number can be deleted fully.
         int khDeleteToIndex = _khNumbersList[_khNumbersList.Count - 1].ToString().Length + 1;
@@ -118,7 +114,7 @@ class khEquation {
         }
     }
 
-
+    // Clears the equation completely.
     private void KhClearEquation() {
         _khNumbersList.Clear();
         _khUsedOperations.Clear();
@@ -127,25 +123,29 @@ class khEquation {
         _khNumberOfNumbersInEquation = _khNumbersList.Count;
     }
 
+    // Adds an operator to the equation.
     private void KhAddOperator(string khEquationPart) {
         _khUsedOperations.Add(khEquationPart);
         _khNumberOfOperators += 1;
         _khEquationString += $"{khEquationPart} ";
     }
 
-    // Checks if the equation string ends in an operator
-    private bool KhEndWithOperation() {
+    // Checks if the equation is valid.
+    private bool KhEquationValidator() {
         bool endsWithOperation = false;
         foreach (string khOperation in _khUsedOperations)
         {
-            if (_khEquationString.EndsWith(khOperation))
-            {
+            if (_khEquationString.EndsWith(khOperation)) {
+                endsWithOperation = true;
+            }
+            if (_khUsedOperations.Count > 1) {
                 endsWithOperation = true;
             }
         }
         return endsWithOperation;
     }
 
+    // Adds a number to the equation list.
     private void KhAddNumber(string khEquationPart) {
         double khEquationPartToDouble;
         if (double.TryParse(khEquationPart, out khEquationPartToDouble)){
@@ -158,13 +158,14 @@ class khEquation {
     // Writes the equation string to the terminal so the user can validate it.
     private void KhEquationCheck() {
         _khEquationString = _khEquationString.Trim();
-        bool khEndWithOperator = KhEndWithOperation();
+        bool khEndWithOperator = KhEquationValidator();
         
         // Only runs this part if the equation doesn't end in an operatiom. 
         if (khEndWithOperator == false) {
             
             // Asks the user if the calculation is correct. Have them enter it again if not.
             Console.Clear();
+            Console.WriteLine("The equation you typed in:");
             Console.Write($"Did you mean to put \"{_khEquationString}\"?: ");
             string khUserNumberResponse = Console.ReadLine();
             switch (khUserNumberResponse.ToLower()) {
@@ -177,23 +178,20 @@ class khEquation {
                     case "no":
                     // Resets equations stats to have the user enter in a fixed equation.
                     _khEquationCorrect = false;
-                    _khNumbersList.Clear();
-                    _khUsedOperations.Clear();
-                    _khNumberOfNumbersInEquation = 0;
-                    _khNumberOfOperators = 0;
+                    KhClearEquation();
                     Console.WriteLine("That's ok. Try again.");
                     Console.Write("Press enter to continue: ");
                     Console.ReadLine();
                     break;
                     default:
                     Console.WriteLine($"\"{khUserNumberResponse}\" is not a valid response. \"yes\" or \"no\" only (first letter accepted too).");
+                    KhClearEquation();
                     break;
             }
         }
         else {
-            Console.WriteLine("Your equation can't end in an operator. Try again.");
+            Console.WriteLine("Your equation is too long (1 operator max) or ends in an operator. Try again.");
             Console.Write("Press enter to continue: ");
-            _khEquationString += " ";
             Console.ReadLine();
         }
                     
@@ -208,6 +206,11 @@ class khEquation {
     // Gets the numbers list.
     public List<double> KhGetNumbersList() {
         return _khNumbersList;
+    }
+
+    // Returns the raw equation string.
+    public string KhGetEquationString() {
+        return _khEquationString;
     }
     
     // Returns the tostring of the equation instance.

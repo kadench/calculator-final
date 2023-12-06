@@ -4,20 +4,29 @@
 // Sources:
 // https://byui.instructure.com/courses/249838/assignments/11893911?module_item_id=32704680 | Following the assignment's rubric.
 // https://acrobat.adobe.com/id/urn:aaid:sc:US:5c0d42b8-a5c3-4502-9246-da8e9fb1445c | First draft of my project plan.
-class Addition : khOperation {
-    public Addition(List<double> numbers) {
-        _khNumberList = numbers;
-        Console.WriteLine("The operation system hasn't been implemented yet and tested so this is made up for now, giving you an idea of what it may look like");
-        Console.WriteLine("I have only included the methods and constructers I gave myself with the template.");
-        Console.Write("Press enter to continue: ");
-        Console.ReadLine();
+// Emma helped me realize I needed the base class to construct the children.
+class khAddition : khOperation {
+
+    // Constructor for the addition class which gets the numbers to find the solution.
+    public khAddition(List<double> khNumbersList) : base(khNumbersList) {
+        _khNumber1 = khNumbersList[0];
+        _khNumber2 = khNumbersList[1];
+        KhDoOperation();
     }
 
+    // Does the addition between the two numbers
     protected override void KhDoOperation() {
-        double sum = 0;
-        foreach (double num in _khNumberList) {
-            sum += num;
-        }
-        Console.WriteLine("The sum is:", sum);
+        _khSolution = _khNumber1 + _khNumber2;
+    }
+
+    // Returns the solution as a double to be added up later.
+    public double GetSolution() {
+        return _khSolution;
+    }
+
+    // Returns the ToString of the addition class
+    public override string ToString()
+    {
+        return $"{_khSolution}";
     }
 }

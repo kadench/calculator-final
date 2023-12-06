@@ -4,21 +4,30 @@
 // Sources:
 // https://byui.instructure.com/courses/249838/assignments/11893911?module_item_id=32704680 | Following the assignment's rubric.
 // https://acrobat.adobe.com/id/urn:aaid:sc:US:5c0d42b8-a5c3-4502-9246-da8e9fb1445c | First draft of my project plan.
+// Emma helped me realize I needed the base class to construct the children.
 
-class Subtraction : khOperation {
-    public Subtraction(List<double> numbers) {
-        _khNumberList = numbers;
-        Console.WriteLine("The operation system hasn't been implemented yet and tested so this is made up for now, giving you an idea of what it may look like");
-        Console.WriteLine("I have only included the methods and constructers I gave myself with the template.");
-        Console.Write("Press enter to continue: ");
-        Console.ReadLine();
+class khSubtraction : khOperation {
+    
+    // Constructer that sets up the instance to be subtracted from.
+    public khSubtraction(List<double> khNumbersList) : base(khNumbersList) {
+        _khNumber1 = khNumbersList[0];
+        _khNumber2 = khNumbersList[1];
+        KhDoOperation();
     }
 
+    // Subtracts the two numbers to find the solution.
     protected override void KhDoOperation() {
-        double difference = _khNumberList[0];
-        for (int i = 1; i < _khNumberList.Count; i++) {
-            difference -= _khNumberList[i];
-        }
-        Console.WriteLine("The difference is: " + difference);
+        _khSolution = _khNumber1 - _khNumber2;
+    }
+
+    // Returns the solution as a double to be added up later.
+    public double GetSolution() {
+        return _khSolution;
+    }
+
+    // Returns the ToString of the subtraction class,
+    public override string ToString()
+    {
+        return $"{_khSolution}";
     }
 }

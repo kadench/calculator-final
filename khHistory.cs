@@ -34,23 +34,61 @@ class khHistory {
         return khProgramHistoryClass;
     }
 
+    // Gets the history list
+    public List<string> GetHistoryList() {
+        return _khHistoryList;
+    }
+
+    // Clears the contents of the history list
+    public void ClearHistoryList() {
+        bool khUserOk = false;
+        do {
+            Console.WriteLine();
+            Console.WriteLine("This action will delete your temporary history forever.");
+            Console.Write("Do you want to continue? (y/n): ");
+            string khUserResponse = Console.ReadLine().ToLower();
+            switch (khUserResponse) {
+                case "yes":
+                case "y":
+                    _khHistoryList.Clear();
+                    khUserOk = true;
+                    break;
+                case "no":
+                case "n":
+                    khUserOk = true;
+                    break;
+                default:
+                    Console.WriteLine($"\"{khUserResponse}\" is not a valid answer. Try again.");
+                    Console.Write("Press enter to continue: ");
+                    Console.ReadLine();
+                    break;
+
+            }
+
+        } while (khUserOk == false);
+    }
+
+    // Adds a string to the only history instance
     public void KhUpdateHistoryList(string khProgramOutput) {
         _khHistoryList.Add(khProgramOutput);
     }
 
-    public string KhGetEquation(List<string> khItemToParse) {
-        return khItemToParse[1];
-    }
-
+    // Uses the string builder class to build a table into one string.
     public override string ToString()
     {
         StringBuilder khStringBuilder = new StringBuilder();
-        khStringBuilder.AppendLine("History:");
+        khStringBuilder.AppendLine("                History:                ");
         khStringBuilder.AppendLine("----------------------------------------");
-        khStringBuilder.AppendLine("Equation | Answer");
-        for (int i = 0; i < _khHistoryList.Count; i++)
-        {
-            khStringBuilder.AppendLine($"{i + 1}. {_khHistoryList[i]}");
+        
+        // Prints the list if anything is in there. Not if otherwise.
+        if (_khHistoryList.Count > 0){
+            for (int i = 0; i < _khHistoryList.Count; i++)
+            {
+                khStringBuilder.AppendLine($"{i + 1}. {_khHistoryList[i]}");
+            }
+        }
+        else {
+            khStringBuilder.AppendLine("      You have no saved equations.        ");
         }
         khStringBuilder.AppendLine("----------------------------------------");
         return khStringBuilder.ToString();
