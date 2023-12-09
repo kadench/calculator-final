@@ -1,15 +1,15 @@
 // Purpose: the purpose of the equation class is to make an equation to be calculated later in the program.
-// It will give easy access to the equation's contents while keeping it seperate from the program itself.
+// It will give easy access to the equation's contents while keeping it separate from the program itself.
 // This class was not on my plan, but I felt it was necessary to add.
 // Authorship: Written and planned out by Kaden Hansen.
 // Copyright (date): Kaden Hansen 12/09/23
 // Sources:
 // https://byui.instructure.com/courses/249838/assignments/11893911?module_item_id=32704680 | Following the assignment's rubric.
 // https://acrobat.adobe.com/id/urn:aaid:sc:US:5c0d42b8-a5c3-4502-9246-da8e9fb1445c | First draft of my project plan.
-// https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/selection-statements | Learning about the benifits of the switch method.
+// https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/selection-statements | Learning about the benefits of the switch method.
 // https://sl.bing.net/gsbQoCK33cG | Help with the clearing of the equation.
 // https://learn.microsoft.com/en-us/dotnet/api/system.string.join?view=net-8.0 | Learning more about String.join.
-// https://www.tutorialspoint.com/How-to-calculate-the-length-of-the-string-using-Chash#:~:text=Use%20the%20String.,the%20length%20of%20the%20string. | How to get string lrngth
+// https://www.tutorialspoint.com/How-to-calculate-the-length-of-the-string-using-Chash#:~:text=Use%20the%20String.,the%20length%20of%20the%20string. | How to get string length
 
 
 class khEquation {
@@ -60,7 +60,7 @@ class khEquation {
         Console.WriteLine("--TIP: type \"=\" when you're done entering an equation.");
         Console.WriteLine("----------------------------------------------------------------------------");
         Console.WriteLine("Items in equation so far:");
-        Console.WriteLine($"Numbers: {_khNumberOfNumbersInEquation} | Operaters: {_khNumberOfOperators} | Last Entered: {khEquationPart}");
+        Console.WriteLine($"Numbers: {_khNumberOfNumbersInEquation} | Operators: {_khNumberOfOperators} | Last Entered: {khEquationPart}");
         
         if (_khNumberOfNumbersInEquation == 0) {
             Console.WriteLine($"Equation: none");
@@ -160,7 +160,7 @@ class khEquation {
         _khEquationString = _khEquationString.Trim();
         bool khEndWithOperator = KhEquationValidator();
         
-        // Only runs this part if the equation doesn't end in an operatiom. 
+        // Only runs this part if the equation doesn't end in an operation. 
         if (khEndWithOperator == false) {
             
             // Asks the user if the calculation is correct. Have them enter it again if not.
@@ -213,7 +213,7 @@ class khEquation {
         return _khEquationString;
     }
     
-    // Returns the tostring of the equation instance.
+    // Returns the ToString of the equation instance.
     public override string ToString()
     {
         return $"Equation: {_khEquationString}";

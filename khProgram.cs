@@ -1,5 +1,5 @@
 // Purpose: the purpose of program is to run the "calculator", meaning to guide the information with it's
-// datatypes to the correct position. This program class will act as the start to the calculator progrom,
+// data types to the correct position. This program class will act as the start to the calculator program,
 // but will not do any sort of manipulation of data for a new result.
 // Authorship: Written and planned out by Kaden Hansen.
 // Copyright (date): Kaden Hansen 12/09/23
@@ -9,7 +9,7 @@
 // https://acrobat.adobe.com/id/urn:aaid:sc:US:5c0d42b8-a5c3-4502-9246-da8e9fb1445c | First draft of my project plan.
 // https://github.com/kadench/polymorphism-development-project/blob/main/program.cs | Remembering how to do the while loop for
 // the guiding of the program with the user's chosen action.
-// https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/selection-statements | Learning about the benifits of the switch method.
+// https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/selection-statements | Learning about the benefits of the switch method.
 // https://youtu.be/Qu93CRt-FGc?si=zJT7hEYTu_8Kth-r | An example of a switch case being used. Explained how to return multiple things.
 // https://sl.bing.net/d60Hbq7xh2y | Asking about scope and the use of static variables in program that effect its running.
 
@@ -48,7 +48,7 @@ class khProgram {
                 Console.Clear();
         }
 
-        // Prints the program's calculator menu for the user. (There is a delay for each writeline to add a cool effect.)
+        // Prints the program's calculator menu for the user. (There is a delay for each WriteLine to add a cool effect.)
         static void KhPrintCalculatorMenu() {
                 Console.WriteLine("--- Calculator Menu ---");
                 Console.WriteLine("1. Enter an equation");
@@ -89,7 +89,7 @@ class khProgram {
                                         Console.Clear();
                                         Console.WriteLine("The result:");
                                         Console.WriteLine(khNewSolution.ToString());
-                                        Console.WriteLine("Your expression has been saved.");
+                                        Console.WriteLine("Your expression has been saved to the calculator's history.");
                                         Console.Write("Press enter to continue: ");
                                         Console.ReadLine();
                                         
@@ -165,8 +165,9 @@ class khProgram {
 
         // Writes the quit warning message to the user.
         static bool KhQuitConfirmation() {
-                bool khQuitQestionAnswered = false;
+                bool khQuitQuestionAnswered = false;
                 bool khUserQuitAnswer = false;
+                Console.WriteLine();
                 Console.WriteLine("All unsaved history will be lost.");
                 do {
                         Console.Write("Are you sure you want to quit the program?: ");
@@ -175,18 +176,18 @@ class khProgram {
                         case "y":
                         case "yes":
                                 khUserQuitAnswer = true;
-                                khQuitQestionAnswered = true;
+                                khQuitQuestionAnswered = true;
                                 break;
                         case "n":
                         case "no":
                                 khUserQuitAnswer = false;
-                                khQuitQestionAnswered = true;
+                                khQuitQuestionAnswered = true;
                                 break;
                         default:
                                 Console.WriteLine($"\"{khUserAnswer}\" is an invalid response. Try again.");
                                 break;
                         }
-                } while(khQuitQestionAnswered == false);
+                } while(khQuitQuestionAnswered == false);
                 return khUserQuitAnswer;
         }
 
