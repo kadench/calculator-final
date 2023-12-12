@@ -73,7 +73,7 @@ class khHistory {
         _khHistoryList.Add(khProgramOutput);
     }
 
-    // Uses the string builder class to build a table into one string.
+    // Uses the string builder class to build the history table into one string.
     public override string ToString()
     {
         StringBuilder khStringBuilder = new StringBuilder();

@@ -10,12 +10,13 @@ abstract class khOperation {
     protected double _khNumber2;
     protected double _khSolution;
 
-    // The Operations's constructer
+    // The Operation's constructor
     public khOperation(List<double> khNumbersList) {
         _khNumber1 = khNumbersList[0];
         _khNumber2 = khNumbersList[1];
     }
 
+    // The abstract method that allows override of the child classes as they all do
+    // different things.
     protected abstract void KhDoOperation();
-
 }
