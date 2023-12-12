@@ -177,6 +177,7 @@ class khProgram {
                         case "yes":
                                 khUserQuitAnswer = true;
                                 khQuitQuestionAnswered = true;
+                                Console.Clear();
                                 break;
                         case "n":
                         case "no":

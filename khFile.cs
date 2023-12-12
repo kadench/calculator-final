@@ -44,14 +44,13 @@ class khFile {
             Console.WriteLine("TIP: You cannot put spaces or [\\, /, :, *, ?, \", <, >, |] in your file name");
             Console.WriteLine("TIP: If you have no saved history, your file will be blank.");
             Console.Write("What do you want this file to be called? (.txt only): ");
-            string khPotentialFileName = Console.ReadLine().Replace(" ", "-").Replace("\\", "-").Replace("/", "-").Replace(":", "-").Replace("*", "-").Replace("?", "-").Replace("<", "-").Replace(">", "-").Replace("|", "-");
+            _khFileName = Console.ReadLine().Replace(" ", "-").Replace("\\", "-").Replace("/", "-").Replace(":", "-").Replace("*", "-").Replace("?", "-").Replace("<", "-").Replace(">", "-").Replace("|", "-");
             Console.Clear();
-            Console.WriteLine($"--WARNING: If a file with the name {khPotentialFileName} exists in {_khFileName}, the contents of the old file will be overridden!");
-            Console.Write($"Are you sure you want to call the new file {khPotentialFileName}? (y/n): ");
+            Console.WriteLine($"--WARNING: If a file with the name {_khFileName} already exists, the contents of the old file will be overridden!");
+            Console.Write($"Are you sure you want to call the new file {_khFileName}? (y/n): ");
             string khUserResponse = Console.ReadLine().ToLower();
             if (khUserResponse == "y") {
                 khFileNameCorrect  = true;
-                _khFileName = khPotentialFileName;
             }
             else if (khUserResponse == "n") {
                 khFileNameCorrect  = false;
@@ -67,8 +66,15 @@ class khFile {
     
     // Saves the history ToString to the file of the users choice.
     public void KhSaveFile() {
-            string khFullPath = Path.Combine(_khSaveDestination, _khFileName);
+        string khFullPath;
+            if (!_khFileName.EndsWith(".txt")) {
+                khFullPath = Path.Combine(_khSaveDestination, $"{_khFileName}.txt");
+            }
+            else {
+                khFullPath = Path.Combine(_khSaveDestination, _khFileName);
+            }
             File.WriteAllText(khFullPath, _khHistoryString);
+            Console.Clear();
             Console.WriteLine($"File saved at {khFullPath}");
             Console.Write("Press enter to continue: ");
             Console.ReadLine();
